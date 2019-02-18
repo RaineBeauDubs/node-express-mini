@@ -30,6 +30,29 @@ server.get('/api/users', (req, res) => {
     })
 })
 
+server.get('/api/users/:id', (req, res) => {
+  const userId = req.params.id;
+
+  db
+    .findById(userId)
+    .then(user => {
+      if (!user) {
+        return res
+          .status(404)
+          .json({ error: 'The user with the specified ID does not exis' })
+      } else {
+        res
+          .status(201)
+          .json({ success: true, user })
+      }
+    })
+    .catch(error => {
+      res
+        .status(500)
+        .json({ success: false, error: "The user information could not be retrieved." })
+    });
+})
+
 server.post('/api/users', (req, res) => {
   const { name, bio } = req.body;
   const newUser = req.body;
