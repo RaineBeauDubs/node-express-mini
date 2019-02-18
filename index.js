@@ -77,6 +77,32 @@ server.post('/api/users', (req, res) => {
     })
 })
 
+server.delete('/api/users/:id', (req, res) => {
+  const userId = req.params.id;
+
+  db
+    .remove(userId)
+    .then(user => {
+      if (!user) {
+        return res
+          .status(404)
+          .json({ 
+            success: false,
+            message: "The user with this specified ID does not exist"
+          });
+      } else {
+        res
+          .status(204)
+          .end();
+      }
+    })
+    .catch(error => {
+      res
+        .status(500)
+        .json({ success: false, error: "The user could not be removed" });
+    });
+})
+
 server.listen(4000, () => {
   console.log(`\n*** Server Running on http://localhost:4000 ***\n`)
 });
